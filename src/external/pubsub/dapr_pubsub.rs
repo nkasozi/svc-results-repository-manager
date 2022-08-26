@@ -22,8 +22,9 @@ pub struct DaprPubSub {
 impl PubSubInterface for DaprPubSub {
     async fn publish_to_reconciled_files_queue(
         &self,
-        queue: &ReconstructedFile,
+        _queue: &ReconstructedFile,
     ) -> Result<bool, AppError> {
+        let _ = self.get_dapr_connection();
         Ok(true)
     }
 }

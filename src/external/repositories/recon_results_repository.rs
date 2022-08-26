@@ -27,6 +27,7 @@ impl ReconResultsRepositoryInterface for ReconResultsRepository {
         &self,
         _file_id: &String,
     ) -> Result<Option<ReconstructedFile>, AppError> {
+        let _ = self.get_dapr_connection();
         Ok(Option::None)
     }
 
@@ -34,6 +35,7 @@ impl ReconResultsRepositoryInterface for ReconResultsRepository {
         &self,
         _reconstructed_file: &ReconstructedFile,
     ) -> Result<bool, AppError> {
+        let _ = self.get_dapr_connection();
         Ok(true)
     }
 }
