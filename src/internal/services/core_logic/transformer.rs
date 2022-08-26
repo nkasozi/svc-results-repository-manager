@@ -31,6 +31,7 @@ impl TransformerInterface for Transformer {
         let mut reconstructed_file = ReconstructedFile {
             file_id: file_upload_chunk.id.clone(),
             file_chunk_id_to_chunk_details_map: HashMap::new(),
+            upload_request_id: file_upload_chunk.upload_request_id.clone(),
         };
 
         reconstructed_file
