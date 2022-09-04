@@ -24,7 +24,7 @@ impl PubSubInterface for DaprPubSub {
         &self,
         _queue: &ReconstructedFile,
     ) -> Result<bool, AppError> {
-        let _ = self.get_dapr_connection();
+        let _ = self.get_dapr_connection().await?;
         Ok(true)
     }
 }

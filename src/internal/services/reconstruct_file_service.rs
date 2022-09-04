@@ -55,13 +55,13 @@ impl ReconstructFileServiceInterface for ReconstructFileService {
         let probable_reconstructed_file = self
             .recon_results_repository
             .get_reconstructed_file(&file_upload_chunk.id)
-            .await?;
+            .await;
 
         let reconstructed_file: ReconstructedFile;
 
         //handle the probable_reconstructed_file
         match probable_reconstructed_file {
-            Some(mut file) => {
+            Ok(mut file) => {
                 //since we already have a reconstructed file for this file,
                 //we simply insert this file chunk in its correct location within that file
                 reconstructed_file = self
@@ -72,7 +72,7 @@ impl ReconstructFileServiceInterface for ReconstructFileService {
                     );
             }
 
-            None => {
+            Err(_) => {
                 //since there is no exisiting reconstructed_file,
                 //we create one
                 reconstructed_file = self

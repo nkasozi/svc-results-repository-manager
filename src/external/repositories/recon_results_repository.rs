@@ -25,18 +25,51 @@ pub struct ReconResultsRepository {
 impl ReconResultsRepositoryInterface for ReconResultsRepository {
     async fn get_reconstructed_file(
         &self,
-        _file_id: &String,
-    ) -> Result<Option<ReconstructedFile>, AppError> {
-        let _ = self.get_dapr_connection();
-        Ok(Option::None)
+        file_id: &String,
+    ) -> Result<ReconstructedFile, AppError> {
+        // Create the client
+        let mut client = self.get_dapr_connection().await?;
+
+        let get_response = client
+            .get_state(
+                self.dapr_state_store_name.clone(),
+                String::from(file_id),
+                None,
+            )
+            .await;
+
+        match get_response {
+            Ok(s) => {
+                let retrieval_result: Result<ReconstructedFile, _> =
+                    serde_json::from_slice(&s.data);
+                match retrieval_result {
+                    Ok(unmarshalled_file_details) => return Ok(unmarshalled_file_details),
+                    Err(e) => return Err(AppError::new(AppErrorKind::NotFound, e.to_string())),
+                };
+            }
+            Err(e) => return Err(AppError::new(AppErrorKind::NotFound, e.to_string())),
+        }
     }
 
     async fn save_reconstructed_file(
         &self,
-        _reconstructed_file: &ReconstructedFile,
-    ) -> Result<bool, AppError> {
-        let _ = self.get_dapr_connection();
-        Ok(true)
+        reconstructed_file: &ReconstructedFile,
+    ) -> Result<String, AppError> {
+        // Create the client
+        let mut client = self.get_dapr_connection().await?;
+
+        let key = reconstructed_file.file_id.clone();
+        let val = serde_json::to_vec(&reconstructed_file).unwrap();
+
+        // save key-value pair in the state store
+        let save_result = client
+            .save_state(self.dapr_state_store_name.clone(), vec![(key.clone(), val)])
+            .await;
+
+        match save_result {
+            Ok(_s) => return Ok(key.clone()),
+            Err(e) => return Err(AppError::new(AppErrorKind::InternalError, e.to_string())),
+        }
     }
 }
 
