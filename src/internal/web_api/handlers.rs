@@ -11,7 +11,7 @@ use crate::internal::{
 };
 
 #[post("/reconstruct-file")]
-async fn reconstruct_file(
+pub(crate) async fn reconstruct_file(
     task_details: web::Json<ReconstructFileFromChunksRequest>,
     service: Data<Box<dyn ReconstructFileServiceInterface>>,
 ) -> HttpResponse {

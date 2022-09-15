@@ -399,9 +399,9 @@ dependencies = [
 
 [[package]]
 name = "dapr"
-version = "0.8.0"
+version = "0.9.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "975e4b5b0a6be62f4b8545989f02657eb5b0034bf1e6ab293fcde62f7ffc2e48"
+checksum = "62360cfd2269792f3406d413aea796a2a4cbc3298055d649b246a7c801977c74"
 dependencies = [
  "async-trait",
  "bytes",
